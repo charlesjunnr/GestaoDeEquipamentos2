@@ -12,8 +12,9 @@
         static ArrayList registroDescricaoChamado = new ArrayList();
         static ArrayList registroEquipamentoChamado = new ArrayList();
         static ArrayList registroDataAbertura = new ArrayList();
+        static ArrayList diasEmAbertoChamados = new ArrayList();
 
-        static int numero = 0;
+        static int numero = 0, numero2 = 0;
         static int MostrarMenuPrincipal()
         {
             Console.Clear();
@@ -74,20 +75,20 @@
                 }
             }
 
-            Console.WriteLine(" - Digite o preço do equipamento: - ");
+            Console.WriteLine(" ---    Digite o preço do equipamento:    --- ");
             registroDePrecos.Add(Console.ReadLine());
-            Console.WriteLine(" - Digite o número de série do equipamento: - ");
+            Console.WriteLine(" ---    Digite o número de série do equipamento:    --- ");
             registroNumeroSerie.Add(Console.ReadLine());
-            Console.WriteLine(" - Digite a data de aquisição do equipamento: - ");
+            Console.WriteLine(" ---    Digite a data de aquisição do equipamento:    --- ");
             registroData.Add(Console.ReadLine());
-            Console.WriteLine(" - Digite o fabricante do equipamento:  - ");
+            Console.WriteLine(" ---    Digite o fabricante do equipamento:    --- ");
             registroFabricante.Add(Console.ReadLine());
         }
         static void RegistrarChamados()
         {
             Console.Clear();
             Console.WriteLine(" -------------------------------------------------------------------------------------------");
-            Console.WriteLine(" -------------------------------- Registro de Chamados   ---------------------------------- ");
+            Console.WriteLine("                                  Registro de Chamados                                      ");
             Console.WriteLine(" -------------------------------------------------------------------------------------------");
             string tituloChamado = "";
             while (tituloChamado.Count() <= 6)
@@ -105,12 +106,13 @@
                 }
             }
 
-            Console.WriteLine(" - Digite o que ocorreu com o equipamento: - ");
+            Console.WriteLine(" ---    Digite o que ocorreu com o equipamento:    --- ");
             registroDescricaoChamado.Add(Console.ReadLine());
-            Console.WriteLine(" - Digite o nome do equipamento: - ");
+            Console.WriteLine(" ---    Digite o nome do equipamento:    --- ");
             registroEquipamentoChamado.Add(Console.ReadLine());
-            Console.WriteLine(" - Digite a data de abertura chamado: - ");
+            Console.WriteLine(" ---    Digite a data de abertura chamado:    --- ");
             registroDataAbertura.Add(Console.ReadLine());
+            
         }
         static void DeletarEquipamento()
         {
@@ -131,11 +133,11 @@
             int numeroExcluir = Convert.ToInt32(Console.ReadLine());
             numeroExcluir -= 1;
 
-            registroDeNomesEquipamentos.RemoveAt(numeroExcluir);
-            registroDePrecos.RemoveAt(numeroExcluir);
+            registroTituloChamado.RemoveAt(numeroExcluir);
+            registroDescricaoChamado.RemoveAt(numeroExcluir);
             registroNumeroSerie.RemoveAt(numeroExcluir);
-            registroData.RemoveAt(numeroExcluir);
-            registroFabricante.RemoveAt(numeroExcluir);
+            registroEquipamentoChamado.RemoveAt(numeroExcluir);
+            registroDataAbertura.RemoveAt(numeroExcluir);
             Console.WriteLine($"- Chamado excluído com sucesso! -");
         }
         static void EditarEquipamento()
@@ -188,39 +190,51 @@
         static void VisualizarEquipamento()
         {
             numero = 0;
-            Console.WriteLine(" -------------------------------------------------------------------------------------------");
-            Console.WriteLine($"| Número | Nome do equipamento | Preço | Número de Série | Data de Aquisição | Fabricante |");
-            Console.WriteLine(" -------------------------------------------------------------------------------------------");
+            Console.WriteLine(" --------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine($" Número \t Nome do equipamento \t\t Preço \t Número de Série \t Data de Aquisição \t Fabricante ");
+            Console.WriteLine(" --------------------------------------------------------------------------------------------------------------------------");
             foreach (string value in registroDeNomesEquipamentos)
             {
 
-                Console.WriteLine($"| {numero + 1} | {registroDeNomesEquipamentos[numero]} | R${registroDePrecos[numero]} | {registroNumeroSerie[numero]} | {registroData[numero]} | {registroFabricante[numero]} |");
-                Console.WriteLine(" -------------------------------------------------------------------------------------------");
+                Console.WriteLine($" {numero + 1} \t\t {registroDeNomesEquipamentos[numero]} \t\t R${registroDePrecos[numero]} \t {registroNumeroSerie[numero]} \t\t\t {registroData[numero]} \t\t {registroFabricante[numero]} ");
+                Console.WriteLine(" --------------------------------------------------------------------------------------------------------------------------");
                 numero++;
             }
             Console.ReadLine();
         }
         static void VisualizarChamados()
         {
-            numero = 0;
-            Console.WriteLine(" -------------------------------------------------------------------------------------------");
-            Console.WriteLine($"| Número | Título | Descrição | Equipamento | Data de abertura |");
-            Console.WriteLine(" -------------------------------------------------------------------------------------------");
-            foreach (string value in registroTituloChamado)
-            {
 
-                Console.WriteLine($"| {numero + 1} | {registroDescricaoChamado[numero]} | {registroDescricaoChamado[numero]} | {registroEquipamentoChamado[numero]} | {registroDataAbertura[numero]} |");
-                Console.WriteLine(" -------------------------------------------------------------------------------------------");
-                numero++;
+            numero = 0;
+
+            for (int i = 0; i < registroDataAbertura.Count; i++) 
+            {
+                DateTime dataChamado = Convert.ToDateTime(registroDataAbertura[i]);
+                diasEmAbertoChamados.Add(dataChamado);
+                diasEmAbertoChamados[i] = (Convert.ToInt32(DateTime.Now.Subtract(dataChamado).TotalDays));
+            }
+
+            Console.WriteLine(" -----------------------------------------------------------------------------------------------------------------------------------------------------");
+            Console.WriteLine($"  Número        Título                                  Descrição Equipamento                              Data de abertura       Dias em aberto  ");
+            Console.WriteLine(" -----------------------------------------------------------------------------------------------------------------------------------------------------");
+            
+            for(int j = 0; j < registroDescricaoChamado.Count; j++)
+            
+            {
+                
+                Console.WriteLine($" {j + 1} \t {registroDescricaoChamado[j]} \t {registroEquipamentoChamado[j]}  \t\t\t            {registroDataAbertura[j]}  \t\t\t{diasEmAbertoChamados[j]} ");
+                Console.WriteLine(" -----------------------------------------------------------------------------------------------------------------------------------------------------");
+                
             }
             Console.ReadLine();
+
         }
 
         static void Main(string[] args)
         {
 
             bool ehContinuar = true;
-
+            
             registroDeNomesEquipamentos.Add("Teclado DragonForce");
             registroDeNomesEquipamentos.Add("MouseGPRO HERO");
             registroDePrecos.Add("300");
@@ -236,6 +250,9 @@
             registroDescricaoChamado.Add("A tecla enter do teclado não funciona.");
             registroEquipamentoChamado.Add("Teclado Dragon Force");
             registroDataAbertura.Add("10/02/2022");
+            
+            DateTime dataChamado = Convert.ToDateTime(registroDataAbertura[0]);
+            diasEmAbertoChamados.Add(Convert.ToInt32(DateTime.Now.Subtract(dataChamado).TotalDays));
 
             do
             {
@@ -271,10 +288,6 @@
                     default: Console.WriteLine(" - Opção inválida! - "); Console.ReadLine(); continue;
                 }
             } while (ehContinuar == true);
-
-
-
-
         }
     }
 }
